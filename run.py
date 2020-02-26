@@ -19,69 +19,14 @@ for device in gpu_devices:
 
 start_time = time.time()
 
-#train_dataset, metadata = tfds.load('mnist:3.*.*', split='train', as_supervised=True, with_info=True)
-#test_dataset = tfds.load('mnist:3.*.*', split='test', as_supervised=True)
+train_dataset, metadata = tfds.load('mnist:3.*.*', split='train', as_supervised=True, with_info=True)
+test_dataset = tfds.load('mnist:3.*.*', split='test', as_supervised=True)
 
-train_dataset, metadata = tfds.load('mnist:3.*.*', split='train[70%:]', as_supervised=True, with_info=True)
-test_dataset = tfds.load('mnist:3.*.*', split='test[70%:]', as_supervised=True)
 
 num_train_examples = int(metadata.splits['train'].num_examples*0.3)
 num_test_examples = int(metadata.splits['test'].num_examples*0.3)
 
 num_classes = metadata.features['label'].num_classes
-
-td_x = np.zeros((3000, 28, 28, 1), dtype=np.uint8)
-td_y = np.zeros((3000), dtype=np.uint8)
-
-trd_x = np.zeros((18000, 28, 28, 1), dtype=np.uint8)
-trd_y = np.zeros((18000), dtype=np.uint8)
-
-
-i = 0
-one = 0
-three = 0
-five = 0
-seven = 0
-nine = 0
-for elem in test_dataset:
-    if elem[1].numpy() == 1 and one < 200:
-        td_x[i] = elem[0]
-        td_y[i] = 3
-        one += 1
-    elif elem[1].numpy() == 3 and three < 200:
-        td_x[i] = elem[0]
-        td_y[i] = 9
-        three += 1
-    elif elem[1].numpy() ==5 and five < 200:
-        td_x[i] = elem[0]
-        td_y[i] = 0
-        five += 1
-    elif elem[1].numpy() == 7 and seven < 200:
-        td_x[i] = elem[0]
-        td_y[i] = 4
-        seven += 1
-    elif elem[1].numpy() == 9 and nine < 200:
-        td_x[i] = elem[0]
-        td_y[i] = 2
-        nine += 1 
-    else:
-        td_x[i] = elem[0]
-        td_y[i] = elem[1].numpy()
-    i += 1
-
-i = 0
-for elem in train_dataset:
-    trd_x[i] = elem[0]
-    trd_y[i] = elem[1].numpy()
-    i += 1
-
-td_x = tf.data.Dataset.from_tensor_slices(td_x)
-td_y = tf.data.Dataset.from_tensor_slices(td_y)
-td = tf.data.Dataset.zip((td_x, td_y))
-
-trd_x = tf.data.Dataset.from_tensor_slices(trd_x)
-trd_y = tf.data.Dataset.from_tensor_slices(trd_y)
-trd = tf.data.Dataset.zip((trd_x, trd_y))
 
 def normalize(images, labels):
     print(labels)
@@ -89,21 +34,14 @@ def normalize(images, labels):
     images /= 255
     return images, labels
 
-del train_dataset
-del test_dataset
-
-#rain_dataset =  train_dataset.map(normalize)
-td =  td.map(normalize)
-trd =  trd.map(normalize)
-#test_dataset = test_dataset.map(normalize)
+train_dataset =  train_dataset.map(normalize)
+test_dataset = test_dataset.map(normalize)
 
 #.take(num_train_examples)
 BATCH_SIZE = 64
 NUM_EPOCHS = 8
-#train_dataset = train_dataset.cache().shuffle(num_train_examples).batch(BATCH_SIZE).repeat(NUM_EPOCHS)
-#test_dataset = test_dataset.cache().shuffle(num_test_examples).batch(BATCH_SIZE).repeat(1)
-trd = trd.cache().shuffle(num_train_examples).batch(BATCH_SIZE).repeat(NUM_EPOCHS)
-td = td.cache().shuffle(num_test_examples).batch(BATCH_SIZE).repeat(1)
+train_dataset = train_dataset.cache().shuffle(num_train_examples).batch(BATCH_SIZE).repeat(NUM_EPOCHS)
+test_dataset = test_dataset.cache().shuffle(num_test_examples).batch(BATCH_SIZE).repeat(1)
 
 
 data_information = {

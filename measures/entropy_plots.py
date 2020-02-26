@@ -37,9 +37,7 @@ plt.plot([1,2,3,4,5,6,7,8,9], learning[3], marker='x', linestyle=':', linewidth=
 plt.legend(fontsize='x-large')
 plt.tight_layout()
 plt.xticks(fontsize=20)
-#plt.yticks([])
 plt.savefig('learning.png')
-#plt.show()
 
 plt.figure(dpi=1000)
 plt.ylabel('H(ε)', fontsize=20)
@@ -50,12 +48,12 @@ plt.plot([1,2,3,4,5,6,7,8,9], params[0], marker='.', linestyle=':', linewidth=1,
 plt.plot([1,2,3,4,5,6,7,8,9], params[1], marker='1', linestyle=':', linewidth=1, label='FMNIST')
 plt.plot([1,2,3,4,5,6,7,8,9], params[2], marker='+', linestyle=':', linewidth=1, label='CIFAR10')
 plt.plot([1,2,3,4,5,6,7,8,9], params[3], marker='x', linestyle=':', linewidth=1, label='SVHN')
-#plt.legend()
+
 plt.tight_layout()
-#plt.yticks([])
+
 plt.xticks(fontsize=20)
 plt.savefig('params.png')
-#plt.show()
+
 
 plt.figure(dpi=1000)
 plt.ylabel('H(ε)', fontsize=20)
@@ -66,22 +64,8 @@ plt.plot([1,2,3,4,5,6,7,8,9], topology[0], marker='.', linestyle=':', linewidth=
 plt.plot([1,2,3,4,5,6,7,8,9], topology[1], marker='1', linestyle=':', linewidth=1, label='FMNIST')
 plt.plot([1,2,3,4,5,6,7,8,9], topology[2], marker='+', linestyle=':', linewidth=1, label='CIFAR10')
 plt.plot([1,2,3,4,5,6,7,8,9], topology[3], marker='x', linestyle=':', linewidth=1, label='SVHN')
-#plt.legend()
+
 plt.tight_layout()
-#plt.yticks([])
+
 plt.xticks(fontsize=20)
 plt.savefig('topology.png')
-#plt.show()
-
-
-#plt.figure(num=None, figsize=(4, 3), dpi=80, facecolor='w', edgecolor='k')
-#plt.xticks([1,2,3,4,5,6,7,8,9],ticks)
-#plt.ylim(0, 1)
-#plt.plot([1,2,3,4,5,6,7,8,9], learning.iloc[11], marker='.', linestyle=':', label='learning')
-#plt.plot([1,2,3,4,5,6,7,8,9], params.iloc[11], marker='+', linestyle=':', label='parameters')
-#plt.plot([1,2,3,4,5,6,7,8,9], topology.iloc[11], marker='x', linestyle=':', label='topology')
-#plt.legend()
-#plt.tight_layout()
-#plt.yticks([])
-#plt.savefig(os.path.join(maindir, dsetname+'entropy' + ".png"))
-#plt.show()
