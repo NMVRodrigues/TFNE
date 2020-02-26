@@ -4,8 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import time
-from Selective_walk import SelectiveWalk
-from Evolution_ import Evolution
+from selective_walk import SelectiveWalk
+from evolution import Evolution
 from sample import Sample
 import logging
 import numpy as np
@@ -23,8 +23,8 @@ train_dataset, metadata = tfds.load('mnist:3.*.*', split='train', as_supervised=
 test_dataset = tfds.load('mnist:3.*.*', split='test', as_supervised=True)
 
 
-num_train_examples = int(metadata.splits['train'].num_examples*0.3)
-num_test_examples = int(metadata.splits['test'].num_examples*0.3)
+num_train_examples = int(metadata.splits['train'].num_examples)
+num_test_examples = int(metadata.splits['test'].num_examples)
 
 num_classes = metadata.features['label'].num_classes
 
