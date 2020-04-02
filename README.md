@@ -140,8 +140,8 @@ if tf.test.is_gpu_available():
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
 
-## How to cite TFGP
-Papers that include results generated using TFGP should cite the following paper:
+## How to cite TFNE
+Papers that include results generated using TFNE should cite the following paper:
 
 ```xml
 To Be Added 
