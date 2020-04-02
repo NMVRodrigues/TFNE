@@ -144,5 +144,5 @@ print("--- %s seconds ---" % (time.time() - start_time))
 Papers that include results generated using TFGP should cite the following paper:
 
 ```xml
-To Be Added IEE ACCESS bibtex ref
+To Be Added 
 ```
