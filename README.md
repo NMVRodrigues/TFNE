@@ -84,16 +84,18 @@ start_time = time.time()
 Import the dataset and pre process the data 
 ##################################################################
 """
-
+# Importing MNIST from tf datasets
 train_dataset, metadata = tfds.load('mnist:3.*.*', split='train', as_supervised=True, with_info=True)
 test_dataset = tfds.load('mnist:3.*.*', split='test', as_supervised=True)
 
-
+# Getting the number of examples from each partition
 num_train_examples = int(metadata.splits['train'].num_examples)
 num_test_examples = int(metadata.splits['test'].num_examples)
 
+# Getting the number of classes
 num_classes = metadata.features['label'].num_classes
 
+# Normalizing the pizel values to be in the [0,1] range
 def normalize(images, labels):
     print(labels)
     images = tf.cast(images, tf.float32)
@@ -103,6 +105,7 @@ def normalize(images, labels):
 train_dataset =  train_dataset.map(normalize)
 test_dataset = test_dataset.map(normalize)
 
+# Defining a data pipeline to be fed into the model
 BATCH_SIZE = 64
 NUM_EPOCHS = 8
 train_dataset = train_dataset.cache().shuffle(num_train_examples).batch(BATCH_SIZE).repeat(NUM_EPOCHS)
@@ -130,10 +133,13 @@ data_information = {
 Call and run the desired algorithm
 ##################################################################
 """
-
-evo = Evolution(7,2,20,data_information)
+# Creating a neuroevolution object with the following parameters:
+# population of 7 individuals with a tournament size 2 and 20 generations
+evo = Evolution(7,2,20,data_information) 
+# Calling the GPU
 if tf.test.is_gpu_available():
     with tf.device("GPU:0"):
+        # Performing 10 neuroevolution runs
         evo.evolve(10)
 
 
