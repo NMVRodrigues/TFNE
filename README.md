@@ -2,6 +2,8 @@
 
 TFNE is a Tensorflow based Neuroevolution package. It provides a modular grammar based Neuroevolution algorithm that is very simple to modify and enhance, along with multiple Fitness Landscapes analysis methods.
 
+Full file documentation comming soon.
+
 
 TF includes the following features:
 
@@ -145,6 +147,46 @@ if tf.test.is_gpu_available():
 
 print("--- %s seconds ---" % (time.time() - start_time))
 ```
+In the following example we show how simple it is to add new layers to the grammar, byt adding a batch normalization layer.
+
+```xml
+{
+    "Conv": {
+        "filters": [32,64,128,256],
+        "kernel_size": [2,3,4,5],
+        "stride": [1,2,3],
+        "activation": ["relu", "elu", "sigmoid"],
+        "use_bias": [true, false]
+    },
+    "Pool": {
+        "type": ["Max", "Avg"],
+        "pool_size": [2,3,4,5],
+        "stride": [1,2,3]
+    },
+    "Dense": {
+        "units": [8,16,32,64,128,256,512],
+        "activation": ["relu", "elu", "sigmoid"],
+        "use_bias": [true, false]
+    },
+    "Drop": {
+        "active": [true, false]
+    },
+    "BatchNorm": {
+        "momentum": [0.999, 0.99, 0.9],
+        "epsilon": [0.01, 0.001, 0.0001]
+    },
+    "Optimizer": {
+        "lr": [0.01, 0.001, 0.0001, 0.00001],
+        "decay": [0.01, 0.001, 0.0001, 0.00001],
+        "momentum": [0.99, 0.9, 0.5, 0.1],
+        "nesterov": [true, false]
+    }
+}
+```
+
+## How to run
+Simply clone the repo and run the given examples or make new scripts in the same format.
+
 
 ## How to cite TFNE
 Papers that include results generated using TFNE should cite the following paper:
