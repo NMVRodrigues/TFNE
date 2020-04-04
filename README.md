@@ -186,6 +186,8 @@ In the following example we show how simple it is to add new layers to the gramm
 
 ## How to run
 Simply clone the repo and run the given examples or make new scripts in the same format.
+`run.py` is the same as the example provided in this readme.
+`overfit.py` is a script that replicates the generation of the SM (overfit) dataset described in the paper.
 
 
 ## How to cite TFNE
