@@ -194,5 +194,12 @@ Simply clone the repo and run the given examples or make new scripts in the same
 Papers that include results generated using TFNE should cite the following paper:
 
 ```xml
-To Be Added 
+@ARTICLE{9113453,
+  author={N. M. {Rodrigues} and S. {Silva} and L. {Vanneschi}},
+  journal={IEEE Access}, 
+  title={A Study of Generalization and Fitness Landscapes for Neuroevolution}, 
+  year={2020},
+  volume={8},
+  number={},
+  pages={108216-108234},} 
 ```
