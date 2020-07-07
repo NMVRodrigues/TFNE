@@ -1,4 +1,4 @@
-from genome_mutations import *
+from .genome_mutations import *
 
 def learning_mutations(genome):
     option = randint(1, 4)

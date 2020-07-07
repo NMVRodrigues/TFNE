@@ -1,4 +1,4 @@
-from encoding import *
+from .encoding import *
 from random import randint, uniform
 
 def add_conv(genome):
@@ -151,20 +151,25 @@ def change_kernel_size(genome, layer):
 
 
 def change_lr(genome):
-    genome.optimizer.lr = choice(params['Optimizer']['lr'])
+    genome.optimizer.lr = choice(params['Optimizer']['SGD']['lr'])
     return genome
 
 
 def change_decay(genome):
-    genome.optimizer.decay = choice(params['Optimizer']['decay'])
+    genome.optimizer.decay = choice(params['Optimizer']['SGD']['decay'])
     return genome
 
 
 def change_momentum(genome):
-    genome.optimizer.momentum = choice(params['Optimizer']['momentum'])
+    genome.optimizer.momentum = choice(params['Optimizer']['SGD']['momentum'])
     return genome
 
 
 def change_nesterov(genome):
-    genome.optimizer.nesterov = choice(params['Optimizer']['nesterov'])
+    genome.optimizer.nesterov = choice(params['Optimizer']['SGD']['nesterov'])
     return genome
+
+
+# ----------Optimize----------
+def change_optimizer(genome):
+    pass

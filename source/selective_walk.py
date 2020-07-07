@@ -1,18 +1,19 @@
-from encoding import *
+from .encoding import *
 from random import randint
 import math
 import tensorflow as tf
 from copy import deepcopy
-from apply_mutations import topology_mutations, parameter_mutations, learning_mutations
-from saving_handler import *
+from .apply_mutations import topology_mutations, parameter_mutations, learning_mutations
+from .saving_handler import *
 
 
 
 class SelectiveWalk:
-    def __init__(self, size, neighbors, data_information):
+    def __init__(self, size, neighbors, data_information, mutations):
         self.size = size
         self.neighbors = neighbors
         self.data_information = data_information
+        self.mutations = mutations
 
     def walk(self, runs):
 
@@ -84,7 +85,17 @@ def create_neighbors(source, number):
 
     for _ in range(number):
         indiv_copy = deepcopy(source)
-        mutation, indiv_copy = topology_mutations(indiv_copy)
+
+        if 'learning' in self.mutations:
+            mutation, indiv_copy = learning_mutations(indiv_copy)
+        elif 'params' in self.mutations:
+            mutation, indiv_copy = parameter_mutations(indiv_copy)
+        elif 'topology' in self.mutations:
+            mutation, indiv_copy = topology_mutations(indiv_copy)
+        else:
+            print('Invalid mutation selected \n')
+            sys.exit(0)
+        
         indiv_copy.reset_values()
         mutations.append(mutation)
         individuals.append(indiv_copy)

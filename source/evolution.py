@@ -1,19 +1,20 @@
-from encoding import *
+from .encoding import *
 from random import randint, random
 import math
 import tensorflow as tf
 from copy import deepcopy
-from apply_mutations import topology_mutations, parameter_mutations, learning_mutations
-from saving_handler import *
+from .apply_mutations import topology_mutations, parameter_mutations, learning_mutations
+from .saving_handler import *
 import os
 
 
 class Evolution:
-    def __init__(self, population_size, tournament_size, generations, data_information):
+    def __init__(self, population_size, tournament_size, generations, data_information, mutations):
         self.population_size = population_size
         self.generations = generations
         self.tournament_size = tournament_size
         self.data_information = data_information
+        self.mutations = mutations
 
     def evolve(self, runs):
         for run in range(runs):
@@ -72,7 +73,17 @@ class Evolution:
         offspring = []
         for parent in parents:
             indiv_copy = deepcopy(parent)
-            mutation, indiv_copy = topology_mutations(indiv_copy)
+
+            if 'learning' in self.mutations:
+                mutation, indiv_copy = learning_mutations(indiv_copy)
+            elif 'params' in self.mutations:
+                mutation, indiv_copy = parameter_mutations(indiv_copy)
+            elif 'topology' in self.mutations:
+                mutation, indiv_copy = topology_mutations(indiv_copy)
+            else:
+                print('Invalid mutation selected \n')
+                sys.exit(0)
+
             mutations.append(mutation)
             indiv_copy.reset_values()
 

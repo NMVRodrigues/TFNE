@@ -1,4 +1,4 @@
-from encoding import *
+from .encoding import *
 from random import randint
 import scipy.stats
 import numpy as np
@@ -6,18 +6,19 @@ import math
 import sys
 import tensorflow as tf
 from copy import deepcopy
-from apply_mutations import topology_mutations, parameter_mutations, learning_mutations
-from saving_handler import *
+from .apply_mutations import topology_mutations, parameter_mutations, learning_mutations
+from .saving_handler import *
 
 
 
 # TODO -> por safety measures caso loss seja nan
 class Sample:
-    def __init__(self, sampling_type, size, data_information, neighbors=0):
+    def __init__(self, sampling_type, size, data_information, mutations, neighbors=0):
         self.size = size
         self.sampling_type = sampling_type
         self.neighbors = neighbors
         self.data_information = data_information
+        self.mutations=mutations
 
 
 
@@ -113,6 +114,17 @@ class Sample:
 
         for _ in range(self.neighbors):
             indiv_copy = deepcopy(parent)
+
+            if 'learning' in self.mutations:
+                mutation, indiv_copy = learning_mutations(indiv_copy)
+            elif 'params' in self.mutations:
+                mutation, indiv_copy = parameter_mutations(indiv_copy)
+            elif 'topology' in self.mutations:
+                mutation, indiv_copy = topology_mutations(indiv_copy)
+            else:
+                print('Invalid mutation selected \n')
+                sys.exit(0)
+                
             mutation, indiv_copy = parameter_mutations(indiv_copy)
             mutations.append(mutation)
             indiv_copy.reset_values()

@@ -2,7 +2,7 @@ from random import random, randint, choice, getrandbits, uniform
 import json
 import tensorflow as tf
 
-with open('parameter_values.json') as json_file:
+with open('source/parameter_values.json') as json_file:
     params = json.load(json_file)
 
 class Genome:
@@ -19,8 +19,8 @@ class Genome:
         self.test_loss = None
     
     def create(self, params, i_shape, o_shape):
-        split1 = randint(1,5)
-        split2 = randint(1,5)
+        split1 = randint(1,3)
+        split2 = randint(1,3)
 
         self.layers.append(Conv(params['Conv'], True, i_shape))
         self.n_conv += 1
@@ -46,7 +46,7 @@ class Genome:
         self.layers.append(Dense(params['Dense'], True, o_shape))
         self.n_dense += 1
 
-        self.optimizer = Optimizer(params['Optimizer'])
+        self.optimizer = Optimizer(params['Optimizer']['SGD'])
 
 
     def phenotype(self):

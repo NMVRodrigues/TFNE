@@ -4,9 +4,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import time
-from selective_walk import SelectiveWalk
-from evolution import Evolution
-from sample import Sample
+from source.selective_walk import SelectiveWalk
+from source.evolution import Evolution
+from source.sample import Sample
 import logging
 import numpy as np
 
@@ -45,8 +45,8 @@ test_dataset = test_dataset.cache().shuffle(num_test_examples).batch(BATCH_SIZE)
 
 
 data_information = {
-    'train_data': trd,
-    'test_data': td,
+    'train_data': train_dataset,
+    'test_data': test_dataset,
     'nt_examples': num_train_examples,
     'nT_examples': num_test_examples,
     'nclasses': num_classes,
@@ -55,20 +55,20 @@ data_information = {
     'batch': 64
 }
 
-#swalk = SelectiveWalk(30, 3, data_information)
+#swalk = SelectiveWalk(30, 3, data_information, ['learning'])
 #if tf.test.is_gpu_available():
 #    with tf.device("GPU:0"):
 #        swalk.walk(10)
 
-#evo = Evolution(7,2,20,data_information)
-#if tf.test.is_gpu_available():
-#    with tf.device("GPU:0"):
-#        evo.evolve(10)
-
-sample = Sample('', 200, data_information, 3)
+evo = Evolution(7,2,20,data_information, ['learning'])
 if tf.test.is_gpu_available():
     with tf.device("GPU:0"):
-        sample.metropolis_hastings()
+        evo.evolve(10)
+
+#sample = Sample('', 200, data_information, ['learning'], 3)
+#if tf.test.is_gpu_available():
+#    with tf.device("GPU:0"):
+#        sample.metropolis_hastings()
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
