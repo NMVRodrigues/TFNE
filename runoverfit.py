@@ -4,11 +4,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import time
-from Selective_walk import SelectiveWalk
-from Evolution_ import Evolution
-from sample import Sample
+from source.Selective_walk import SelectiveWalk
+from source.Evolution_ import Evolution
+from source.sample import Sample
 import logging
-import numpy as np
+import jax.numpy as np
 
 logger = tf.get_logger()
 logger.setLevel(logging.ERROR)
