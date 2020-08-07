@@ -4,6 +4,8 @@ import tensorflow as tf
 
 with open('source/parameter_values.json') as json_file:
     params = json.load(json_file)
+with open('source/parameter_values_fixed.json') as json_file:
+    paramsF = json.load(json_file)
 
 class Genome:
     def __init__(self):
@@ -48,6 +50,22 @@ class Genome:
 
         self.optimizer = Optimizer(params['Optimizer']['SGD'])
 
+    def create_fixed(self, params, encoding, i_shape, o_shape):
+
+        self.layers.append(Conv_fixed(params['Conv'], encoding, True, i_shape))
+        self.layers.append(Pool_fixed(params['Pool']))
+        self.layers.append(Conv_fixed(params['Conv'], encoding))
+        self.layers.append(Pool_fixed(params['Pool']))
+        self.layers.append('flatten \n')
+        self.layers.append(Dense_fixed(params['Dense'], encoding))
+        self.layers.append(Drop_fixed(params['Drop']))
+        self.layers.append(Dense_fixed(params['Dense'], encoding, True, o_shape))
+        self.optimizer = Optimizer_fixed(params['Optimizer'], encoding)
+
+        self.n_conv += 2
+        self.n_pool += 2
+        self.n_dense += 2
+        self.n_drop += 1
 
     def phenotype(self):
 
@@ -80,6 +98,43 @@ class Genome:
                         loss='sparse_categorical_crossentropy',
                         metrics=['accuracy'])
                     
+        return model
+    
+    def phenotype_fixed(self):
+
+        model = tf.keras.Sequential()
+        for layer in self.layers:
+            if type(layer) == Conv_fixed:
+                if layer.input_shape is not None:
+                    model.add(tf.keras.layers.Conv2D(
+                        filters=layer.filters, kernel_size=layer.kernel_size, strides=layer.stride,
+                        padding='same', activation=layer.activation, use_bias=layer.use_bias, input_shape=layer.input_shape))
+                else:
+                     model.add(tf.keras.layers.Conv2D(
+                        filters=layer.filters, kernel_size=layer.kernel_size, strides=layer.stride,
+                        padding='same', activation=layer.activation, use_bias=layer.use_bias))
+            elif type(layer) == Pool_fixed:
+                if layer.type == 'Max':
+                    model.add(tf.keras.layers.MaxPooling2D(pool_size=layer.pool_size, strides=layer.stride, padding='same'))
+                else:
+                    model.add(tf.keras.layers.AveragePooling2D(pool_size=layer.pool_size, strides=layer.stride, padding='same'))
+            elif type(layer) == Drop_fixed:
+                model.add(tf.keras.layers.Dropout(layer.rate))
+            elif type(layer) == Dense_fixed:
+                model.add(tf.keras.layers.Dense(units=layer.units, activation=layer.activation, use_bias=layer.use_bias))
+            else:
+                model.add(tf.keras.layers.Flatten())
+        
+
+        if self.optimizer.type == 'SGD':
+            model.compile(optimizer=tf.keras.optimizers.SGD(), 
+                            loss='sparse_categorical_crossentropy',
+                            metrics=['accuracy'])
+        else:
+            model.compile(optimizer=tf.keras.optimizers.Adam(), 
+                            loss='sparse_categorical_crossentropy',
+                            metrics=['accuracy'])
+
         return model
 
     def count_layers(self):
@@ -178,3 +233,68 @@ class Optimizer:
                ' | decay: ' + str(self.decay) +\
                ' | momentum: ' + str(self.momentum) +\
                ' | nesterov: ' + str(self.nesterov) + '>\n'
+
+
+class Conv_fixed:
+    def __init__(self, params, encoding, input_layer=False, input_shape = None):
+        self.filters = params['filters'][encoding[0]]
+        self.kernel_size = params['kernel_size']
+        self.stride = params['stride']
+        self.activation = params['activation'][encoding[1]]
+        self.use_bias = params['use_bias']
+        if input_layer:
+            self.input_shape = input_shape
+        else:
+            self.input_shape = None
+
+    def __repr__(self):
+        return 'Conv \n < filters: ' + str(self.filters) +\
+               ' | kernel_size: ' + str(self.kernel_size) +\
+               ' | strides: ' + str(self.stride) +\
+               ' | activation: ' + str(self.activation) +\
+               ' | use_bias: ' + str(self.use_bias) + ' >\n'
+
+
+class Pool_fixed:
+    def __init__(self, params):
+        self.type = params['type']
+        self.pool_size = params['pool_size']
+        self.stride = params['stride']
+
+    def __repr__(self):
+        return 'Pool \n < type: ' + self.type +\
+               ' | pool_size: ' + str(self.pool_size) +\
+               ' | strides: ' + str(self.stride) + ' >\n'
+
+
+class Dense_fixed:
+    def __init__(self, params, encoding, final=False, output_shape=None):
+        if final:
+            self.units = output_shape
+            self.activation = 'softmax'
+            self.use_bias = params['use_bias']
+        else:
+            self.units = params['units'][encoding[2]]
+            self.activation = params['activation'][encoding[3]]
+            self.use_bias = params['use_bias']
+
+    def __repr__(self):
+        return 'Dense \n < units: ' + str(self.units) +\
+               ' | activation: ' + str(self.activation) +\
+               ' | use_bias: ' + str(self.use_bias) + ' >\n'
+
+
+class Drop_fixed:
+    def __init__(self, params):
+        self.rate = params['value']
+
+    def __repr__(self):
+        return 'Drop \n < rate: ' + str(self.rate) + ' >\n'
+
+
+class Optimizer_fixed:
+    def __init__(self, params, encoding):
+        self.type = params['type'][encoding[4]]
+
+    def __repr__(self):
+        return 'Optimizer \n < type: ' + str(self.type) + ' >\n'

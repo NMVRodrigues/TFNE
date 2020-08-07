@@ -1,0 +1,25 @@
+{
+    "Conv": {
+        "filters": [32,64,128,256,512],
+        "kernel_size": 3,
+        "stride": 1,
+        "activation": ["sigmoid", "tanh", "relu", "elu"],
+        "use_bias": true
+    },
+    "Pool": {
+        "type": "Max",
+        "pool_size": 2,
+        "stride": 2
+    },
+    "Dense": {
+        "units": [32,64,128,256,512],
+        "activation": ["sigmoid", "tanh", "relu", "elu"],
+        "use_bias": true
+    },
+    "Drop": {
+        "value": 0.3
+    },
+    "Optimizer": {
+        "type": ["SGD", "Adam"]
+    }
+}
